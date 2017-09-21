@@ -1,25 +1,25 @@
 #include ".\ThostTraderApi\ThostFtdcTraderApi.h"
 #include "TraderSpi.h"
 
-CThostFtdcTraderApi* pUserApi;  // UserApi¶ÔÏó
+CThostFtdcTraderApi* pUserApi;  // UserApiå¯¹è±¡
 
-char  FRONT_ADDR[] = "tcp://180.168.146.187:10001";		// Ç°ÖÃµØÖ·
-TThostFtdcBrokerIDType	BROKER_ID = "9999";				// ¾­¼Í¹«Ë¾´úÂë
-TThostFtdcInvestorIDType INVESTOR_ID = "059979";		// Í¶×ÊÕß´úÂë
-TThostFtdcPasswordType  PASSWORD = "Krazy49";			// ÓÃ»§ÃÜÂë
-TThostFtdcInstrumentIDType INSTRUMENT_ID = "CF801";	    // ºÏÔ¼´úÂë
-//TThostFtdcDirectionType	DIRECTION = THOST_FTDC_D_Sell;	// ÂòÂô·½Ïò
+char  FRONT_ADDR[] = "tcp://180.168.146.187:10001";		// å‰ç½®åœ°å€
+TThostFtdcBrokerIDType	BROKER_ID = "9999";				// ç»çºªå…¬å¸ä»£ç 
+TThostFtdcInvestorIDType INVESTOR_ID = "059979";		// æŠ•èµ„è€…ä»£ç 
+TThostFtdcPasswordType  PASSWORD = "123456";			// ç”¨æˆ·å¯†ç 
+TThostFtdcInstrumentIDType INSTRUMENT_ID = "CF801";	    // åˆçº¦ä»£ç 
+//TThostFtdcDirectionType	DIRECTION = THOST_FTDC_D_Sell;	// ä¹°å–æ–¹å‘
 TThostFtdcDirectionType	DIRECTION = THOST_FTDC_D_Buy;     // ping jin THOST_FTDC_OF_CloseToday  THOST_FTDC_OF_Close
-TThostFtdcPriceType	LIMIT_PRICE = 15350;  // 38850;		 // ¼Û¸ñ
-int iRequestID = 0;   // ÇëÇó±àºÅ
+TThostFtdcPriceType	LIMIT_PRICE = 15350;  // 38850;		 // ä»·æ ¼
+int iRequestID = 0;   // è¯·æ±‚ç¼–å·
 
 void insertRequest()
 {
-    pUserApi = CThostFtdcTraderApi::CreateFtdcTraderApi();			// ³õÊ¼»¯´´½¨UserApi
+    pUserApi = CThostFtdcTraderApi::CreateFtdcTraderApi();			// åˆå§‹åŒ–åˆ›å»ºUserApi
     CTraderSpi* pUserSpi = new CTraderSpi();
-    pUserApi->RegisterSpi((CThostFtdcTraderSpi*)pUserSpi);			// ×¢²áÊÂ¼þÀà
-    pUserApi->SubscribePublicTopic(THOST_TERT_QUICK);				// ×¢²á¹«ÓÐÁ÷
-    pUserApi->SubscribePrivateTopic(THOST_TERT_QUICK);				// ×¢²áË½ÓÐÁ÷
+    pUserApi->RegisterSpi((CThostFtdcTraderSpi*)pUserSpi);			// æ³¨å†Œäº‹ä»¶ç±»
+    pUserApi->SubscribePublicTopic(THOST_TERT_QUICK);				// æ³¨å†Œå…¬æœ‰æµ
+    pUserApi->SubscribePrivateTopic(THOST_TERT_QUICK);				// æ³¨å†Œç§æœ‰æµ
     pUserApi->RegisterFront(FRONT_ADDR);							// connect
     pUserApi->Init();
     pUserApi->Join();
