@@ -1,22 +1,22 @@
 #include ".\ThostTraderApi\ThostFtdcMdApi.h"
 #include "MdSpi.h"
 
-CThostFtdcMdApi* pUserApi; // UserApi¶ÔÏó
+CThostFtdcMdApi* pUserApi; // UserApiå¯¹è±¡
 
-char FRONT_ADDR[] = "tcp://180.168.146.187:10011";		// Ç°ÖÃµØÖ·
-TThostFtdcBrokerIDType	BROKER_ID = "9999";				// ¾­¼Í¹«Ë¾´úÂë
-TThostFtdcInvestorIDType INVESTOR_ID = "059979";		// Í¶×ÊÕß´úÂë
-TThostFtdcPasswordType  PASSWORD = "Krazy49";			// ÓÃ»§ÃÜÂë
-char *ppInstrumentID[] = {"cu1710", "cu1801"};			// ÐÐÇé¶©ÔÄÁÐ±í
-int iInstrumentID = 2;									// ÐÐÇé¶©ÔÄÊýÁ¿
-int iRequestID = 0;                                     // ÇëÇó±àºÅ
+char FRONT_ADDR[] = "tcp://180.168.146.187:10011";		// å‰ç½®åœ°å€
+TThostFtdcBrokerIDType	BROKER_ID = "9999";			// ç»çºªå…¬å¸ä»£ç 
+TThostFtdcInvestorIDType INVESTOR_ID = "059979";		// æŠ•èµ„è€…ä»£ç 
+TThostFtdcPasswordType  PASSWORD = "123456";			// ç”¨æˆ·å¯†ç 
+char *ppInstrumentID[] = {"cu1710", "cu1801"};			// è¡Œæƒ…è®¢é˜…åˆ—è¡¨
+int iInstrumentID = 2;						// è¡Œæƒ…è®¢é˜…æ•°é‡
+int iRequestID = 0;                                     // è¯·æ±‚ç¼–å·
 
 void main(void)
 {
-	pUserApi = CThostFtdcMdApi::CreateFtdcMdApi();			// ´´½¨UserApi
+	pUserApi = CThostFtdcMdApi::CreateFtdcMdApi();			// åˆ›å»ºUserApi
 
 	CThostFtdcMdSpi* pUserSpi = new CMdSpi();
-	pUserApi->RegisterSpi(pUserSpi);						// ×¢²áÊÂ¼þÀà
+	pUserApi->RegisterSpi(pUserSpi);						// æ³¨å†Œäº‹ä»¶ç±»
 	pUserApi->RegisterFront(FRONT_ADDR);					// connect
 	pUserApi->Init();
 	pUserApi->Join();
