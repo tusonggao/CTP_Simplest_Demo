@@ -3,7 +3,7 @@
 
 * CTP_md_demo 对应行情订阅；
 * CTP_trade_demo 对应订单提交；
-* CTP_Api为CTP接口所需的头文件和库文件，可以从CTP官网下载。
+* CTP_Api为CTP接口所需的头文件和库文件，可以从[CTP官网](http://www.sfit.com.cn/5_2_DocumentDown.htm)下载。
 
 编译时注意：
 1. CTP_md_demo要链接到thostmduserapi.lib
