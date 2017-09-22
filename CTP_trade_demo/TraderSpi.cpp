@@ -2,26 +2,25 @@
 #include <iostream>
 using namespace std;
 
-#include ".\ThostTraderApi\ThostFtdcTraderApi.h"
 #include "TraderSpi.h"
 
 extern CThostFtdcTraderApi* pUserApi;
 
-extern char FRONT_ADDR[];		// Ç°ÖÃµØÖ·
-extern char BROKER_ID[];		// ¾­¼Í¹«Ë¾´úÂë
-extern char INVESTOR_ID[];		// Í¶×ÊÕß´úÂë
-extern char PASSWORD[];			// ÓÃ»§ÃÜÂë
-extern char INSTRUMENT_ID[];	// ºÏÔ¼´úÂë
-extern TThostFtdcPriceType	LIMIT_PRICE;	// ¼Û¸ñ
-extern TThostFtdcDirectionType	DIRECTION;	// ÂòÂô·½Ïò
-extern int iRequestID; // ÇëÇó±àºÅ
+extern char FRONT_ADDR[];		// å‰ç½®åœ°å€
+extern char BROKER_ID[];		// ç»çºªå…¬å¸ä»£ç 
+extern char INVESTOR_ID[];		// æŠ•èµ„è€…ä»£ç 
+extern char PASSWORD[];			// ç”¨æˆ·å¯†ç 
+extern char INSTRUMENT_ID[];	// åˆçº¦ä»£ç 
+extern TThostFtdcPriceType	LIMIT_PRICE;	// ä»·æ ¼
+extern TThostFtdcDirectionType	DIRECTION;	// ä¹°å–æ–¹å‘
+extern int iRequestID; // è¯·æ±‚ç¼–å·
 
-// »á»°²ÎÊı
-TThostFtdcFrontIDType	FRONT_ID;	//Ç°ÖÃ±àºÅ
-TThostFtdcSessionIDType	SESSION_ID;	//»á»°±àºÅ
-TThostFtdcOrderRefType	ORDER_REF;	//±¨µ¥ÒıÓÃ
+// ä¼šè¯å‚æ•°
+TThostFtdcFrontIDType	FRONT_ID;	//å‰ç½®ç¼–å·
+TThostFtdcSessionIDType	SESSION_ID;	//ä¼šè¯ç¼–å·
+TThostFtdcOrderRefType	ORDER_REF;	//æŠ¥å•å¼•ç”¨
 
-// Á÷¿ØÅĞ¶Ï
+// æµæ§åˆ¤æ–­
 bool IsFlowControl(int iResult)
 {
 	return ((iResult == -2) || (iResult == -3));
@@ -30,7 +29,7 @@ bool IsFlowControl(int iResult)
 void CTraderSpi::OnFrontConnected()
 {
 	cerr << "--->>> " << "OnFrontConnected" << endl;
-	///ÓÃ»§µÇÂ¼ÇëÇó
+	///ç”¨æˆ·ç™»å½•è¯·æ±‚
 	ReqUserLogin();
 }
 
@@ -42,7 +41,7 @@ void CTraderSpi::ReqUserLogin()
 	strcpy(req.UserID, INVESTOR_ID);
 	strcpy(req.Password, PASSWORD);
 	int iResult = pUserApi->ReqUserLogin(&req, ++iRequestID);
-	cerr << "--->>> ·¢ËÍÓÃ»§µÇÂ¼ÇëÇó: " << iResult << ((iResult == 0) ? ", ³É¹¦" : ", Ê§°Ü") << endl;
+	cerr << "--->>> å‘é€ç”¨æˆ·ç™»å½•è¯·æ±‚: " << iResult << ((iResult == 0) ? ", æˆåŠŸ" : ", å¤±è´¥") << endl;
 }
 
 void CTraderSpi::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin,
@@ -51,15 +50,15 @@ void CTraderSpi::OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin,
 	cerr << "--->>> " << "OnRspUserLogin" << endl;
 	if (bIsLast && !IsErrorRspInfo(pRspInfo))
 	{
-		// ±£´æ»á»°²ÎÊı
+		// ä¿å­˜ä¼šè¯å‚æ•°
 		FRONT_ID = pRspUserLogin->FrontID;
 		SESSION_ID = pRspUserLogin->SessionID;
 		int iNextOrderRef = atoi(pRspUserLogin->MaxOrderRef);
 		iNextOrderRef++;
 		sprintf(ORDER_REF, "%d", iNextOrderRef);
-		///»ñÈ¡µ±Ç°½»Ò×ÈÕ
-		cerr << "--->>> »ñÈ¡µ±Ç°½»Ò×ÈÕ = " << pUserApi->GetTradingDay() << endl;
-		///Í¶×ÊÕß½áËã½á¹ûÈ·ÈÏ
+		///è·å–å½“å‰äº¤æ˜“æ—¥
+		cerr << "--->>> è·å–å½“å‰äº¤æ˜“æ—¥ = " << pUserApi->GetTradingDay() << endl;
+		///æŠ•èµ„è€…ç»“ç®—ç»“æœç¡®è®¤
 		ReqSettlementInfoConfirm();
 	}
 }
@@ -71,7 +70,7 @@ void CTraderSpi::ReqSettlementInfoConfirm()
 	strcpy(req.BrokerID, BROKER_ID);
 	strcpy(req.InvestorID, INVESTOR_ID);
 	int iResult = pUserApi->ReqSettlementInfoConfirm(&req, ++iRequestID);
-	cerr << "--->>> Í¶×ÊÕß½áËã½á¹ûÈ·ÈÏ: " << iResult << ((iResult == 0) ? ", ³É¹¦" : ", Ê§°Ü") << endl;
+	cerr << "--->>> æŠ•èµ„è€…ç»“ç®—ç»“æœç¡®è®¤: " << iResult << ((iResult == 0) ? ", æˆåŠŸ" : ", å¤±è´¥") << endl;
 }
 
 void CTraderSpi::OnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField *pSettlementInfoConfirm, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
@@ -79,7 +78,7 @@ void CTraderSpi::OnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField
 	cerr << "--->>> " << "OnRspSettlementInfoConfirm" << endl;
 	if (bIsLast && !IsErrorRspInfo(pRspInfo))
 	{
-		///ÇëÇó²éÑ¯ºÏÔ¼
+		///è¯·æ±‚æŸ¥è¯¢åˆçº¦
 		ReqQryInstrument();
 	}
 }
@@ -94,12 +93,12 @@ void CTraderSpi::ReqQryInstrument()
 		int iResult = pUserApi->ReqQryInstrument(&req, ++iRequestID);
 		if (!IsFlowControl(iResult))
 		{
-			cerr << "--->>> ÇëÇó²éÑ¯ºÏÔ¼: "  << iResult << ((iResult == 0) ? ", ³É¹¦" : ", Ê§°Ü") << endl;
+			cerr << "--->>> è¯·æ±‚æŸ¥è¯¢åˆçº¦: "  << iResult << ((iResult == 0) ? ", æˆåŠŸ" : ", å¤±è´¥") << endl;
 			break;
 		}
 		else
 		{
-			cerr << "--->>> ÇëÇó²éÑ¯ºÏÔ¼: "  << iResult << ", ÊÜµ½Á÷¿Ø" << endl;
+			cerr << "--->>> è¯·æ±‚æŸ¥è¯¢åˆçº¦: "  << iResult << ", å—åˆ°æµæ§" << endl;
 			Sleep(1000);
 		}
 	} // while
@@ -110,7 +109,7 @@ void CTraderSpi::OnRspQryInstrument(CThostFtdcInstrumentField *pInstrument, CTho
 	cerr << "--->>> " << "OnRspQryInstrument" << endl;
 	if (bIsLast && !IsErrorRspInfo(pRspInfo))
 	{
-		///ÇëÇó²éÑ¯ºÏÔ¼
+		///è¯·æ±‚æŸ¥è¯¢åˆçº¦
 		ReqQryTradingAccount();
 	}
 }
@@ -126,12 +125,12 @@ void CTraderSpi::ReqQryTradingAccount()
 		int iResult = pUserApi->ReqQryTradingAccount(&req, ++iRequestID);
 		if (!IsFlowControl(iResult))
 		{
-			cerr << "--->>> ÇëÇó²éÑ¯×Ê½ğÕË»§: "  << iResult << ((iResult == 0) ? ", ³É¹¦" : ", Ê§°Ü") << endl;
+			cerr << "--->>> è¯·æ±‚æŸ¥è¯¢èµ„é‡‘è´¦æˆ·: "  << iResult << ((iResult == 0) ? ", æˆåŠŸ" : ", å¤±è´¥") << endl;
 			break;
 		}
 		else
 		{
-			cerr << "--->>> ÇëÇó²éÑ¯×Ê½ğÕË»§: "  << iResult << ", ÊÜµ½Á÷¿Ø" << endl;
+			cerr << "--->>> è¯·æ±‚æŸ¥è¯¢èµ„é‡‘è´¦æˆ·: "  << iResult << ", å—åˆ°æµæ§" << endl;
 			Sleep(1000);
 		}
 	} // while
@@ -142,7 +141,7 @@ void CTraderSpi::OnRspQryTradingAccount(CThostFtdcTradingAccountField *pTradingA
 	cerr << "--->>> " << "OnRspQryTradingAccount" << endl;
 	if (bIsLast && !IsErrorRspInfo(pRspInfo))
 	{
-		///ÇëÇó²éÑ¯Í¶×ÊÕß³Ö²Ö
+		///è¯·æ±‚æŸ¥è¯¢æŠ•èµ„è€…æŒä»“
 		ReqQryInvestorPosition();
 	}
 }
@@ -159,12 +158,12 @@ void CTraderSpi::ReqQryInvestorPosition()
 		int iResult = pUserApi->ReqQryInvestorPosition(&req, ++iRequestID);
 		if (!IsFlowControl(iResult))
 		{
-			cerr << "--->>> ÇëÇó²éÑ¯Í¶×ÊÕß³Ö²Ö: "  << iResult << ((iResult == 0) ? ", ³É¹¦" : ", Ê§°Ü") << endl;
+			cerr << "--->>> è¯·æ±‚æŸ¥è¯¢æŠ•èµ„è€…æŒä»“: "  << iResult << ((iResult == 0) ? ", æˆåŠŸ" : ", å¤±è´¥") << endl;
 			break;
 		}
 		else
 		{
-			cerr << "--->>> ÇëÇó²éÑ¯Í¶×ÊÕß³Ö²Ö: "  << iResult << ", ÊÜµ½Á÷¿Ø" << endl;
+			cerr << "--->>> è¯·æ±‚æŸ¥è¯¢æŠ•èµ„è€…æŒä»“: "  << iResult << ", å—åˆ°æµæ§" << endl;
 			Sleep(1000);
 		}
 	} // while
@@ -175,7 +174,7 @@ void CTraderSpi::OnRspQryInvestorPosition(CThostFtdcInvestorPositionField *pInve
 	cerr << "--->>> " << "OnRspQryInvestorPosition" << endl;
 	if (bIsLast && !IsErrorRspInfo(pRspInfo))
 	{
-		///±¨µ¥Â¼ÈëÇëÇó
+		///æŠ¥å•å½•å…¥è¯·æ±‚
 		ReqOrderInsert();
 	}
 }
@@ -184,56 +183,56 @@ void CTraderSpi::ReqOrderInsert()
 {
 	CThostFtdcInputOrderField req;
 	memset(&req, 0, sizeof(req));
-	///¾­¼Í¹«Ë¾´úÂë
+	///ç»çºªå…¬å¸ä»£ç 
 	strcpy(req.BrokerID, BROKER_ID);
-	///Í¶×ÊÕß´úÂë
+	///æŠ•èµ„è€…ä»£ç 
 	strcpy(req.InvestorID, INVESTOR_ID);
-	///ºÏÔ¼´úÂë
+	///åˆçº¦ä»£ç 
 	strcpy(req.InstrumentID, INSTRUMENT_ID);
-	///±¨µ¥ÒıÓÃ
+	///æŠ¥å•å¼•ç”¨
 	strcpy(req.OrderRef, ORDER_REF);
-	///ÓÃ»§´úÂë
+	///ç”¨æˆ·ä»£ç 
 //	TThostFtdcUserIDType	UserID;
-	///±¨µ¥¼Û¸ñÌõ¼ş: ÏŞ¼Û
+	///æŠ¥å•ä»·æ ¼æ¡ä»¶: é™ä»·
     req.OrderPriceType = THOST_FTDC_OPT_LimitPrice;
 //    req.OrderPriceType = THOST_FTDC_OPT_AnyPrice; //shijia
-	///ÂòÂô·½Ïò: 
+	///ä¹°å–æ–¹å‘: 
 	req.Direction = DIRECTION;
-	///×éºÏ¿ªÆ½±êÖ¾: ¿ª²Ö
+	///ç»„åˆå¼€å¹³æ ‡å¿—: å¼€ä»“
     // req.CombOffsetFlag[0] = THOST_FTDC_OF_Open;
     req.CombOffsetFlag[0] = THOST_FTDC_OF_CloseToday;//  THOST_FTDC_OF_Close
-	///×éºÏÍ¶»úÌ×±£±êÖ¾
+	///ç»„åˆæŠ•æœºå¥—ä¿æ ‡å¿—
 	req.CombHedgeFlag[0] = THOST_FTDC_HF_Speculation;
-	///¼Û¸ñ
+	///ä»·æ ¼
     req.LimitPrice = LIMIT_PRICE;
     //req.LimitPrice = 0; // shijia
-	///ÊıÁ¿: 1
+	///æ•°é‡: 1
 	req.VolumeTotalOriginal = 1;
-	///ÓĞĞ§ÆÚÀàĞÍ: µ±ÈÕÓĞĞ§
+	///æœ‰æ•ˆæœŸç±»å‹: å½“æ—¥æœ‰æ•ˆ
 	req.TimeCondition = THOST_FTDC_TC_GFD;
-	///GTDÈÕÆÚ
+	///GTDæ—¥æœŸ
 //	TThostFtdcDateType	GTDDate;
-	///³É½»Á¿ÀàĞÍ: ÈÎºÎÊıÁ¿
+	///æˆäº¤é‡ç±»å‹: ä»»ä½•æ•°é‡
 	req.VolumeCondition = THOST_FTDC_VC_AV;
-	///×îĞ¡³É½»Á¿: 1
+	///æœ€å°æˆäº¤é‡: 1
 	req.MinVolume = 1;
-	///´¥·¢Ìõ¼ş: Á¢¼´
+	///è§¦å‘æ¡ä»¶: ç«‹å³
 	req.ContingentCondition = THOST_FTDC_CC_Immediately;
-	///Ö¹Ëğ¼Û
+	///æ­¢æŸä»·
 //	TThostFtdcPriceType	StopPrice;
-	///Ç¿Æ½Ô­Òò: ·ÇÇ¿Æ½
+	///å¼ºå¹³åŸå› : éå¼ºå¹³
 	req.ForceCloseReason = THOST_FTDC_FCC_NotForceClose;
-	///×Ô¶¯¹ÒÆğ±êÖ¾: ·ñ
+	///è‡ªåŠ¨æŒ‚èµ·æ ‡å¿—: å¦
 	req.IsAutoSuspend = 0;
-	///ÒµÎñµ¥Ôª
+	///ä¸šåŠ¡å•å…ƒ
 //	TThostFtdcBusinessUnitType	BusinessUnit;
-	///ÇëÇó±àºÅ
+	///è¯·æ±‚ç¼–å·
 //	TThostFtdcRequestIDType	RequestID;
-	///ÓÃ»§Ç¿ÆÀ±êÖ¾: ·ñ
+	///ç”¨æˆ·å¼ºè¯„æ ‡å¿—: å¦
 	req.UserForceClose = 0;
 
 	int iResult = pUserApi->ReqOrderInsert(&req, ++iRequestID);
-	cerr << "--->>> ±¨µ¥Â¼ÈëÇëÇó: " << iResult << ((iResult == 0) ? ", ³É¹¦" : ", Ê§°Ü") << endl;
+	cerr << "--->>> æŠ¥å•å½•å…¥è¯·æ±‚: " << iResult << ((iResult == 0) ? ", æˆåŠŸ" : ", å¤±è´¥") << endl;
 }
 
 void CTraderSpi::OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
@@ -244,43 +243,43 @@ void CTraderSpi::OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThost
 
 void CTraderSpi::ReqOrderAction(CThostFtdcOrderField *pOrder)
 {
-	static bool ORDER_ACTION_SENT = false;		//ÊÇ·ñ·¢ËÍÁË±¨µ¥
+	static bool ORDER_ACTION_SENT = false;		//æ˜¯å¦å‘é€äº†æŠ¥å•
 	if (ORDER_ACTION_SENT)
 		return;
 
 	CThostFtdcInputOrderActionField req;
 	memset(&req, 0, sizeof(req));
-	///¾­¼Í¹«Ë¾´úÂë
+	///ç»çºªå…¬å¸ä»£ç 
 	strcpy(req.BrokerID, pOrder->BrokerID);
-	///Í¶×ÊÕß´úÂë
+	///æŠ•èµ„è€…ä»£ç 
 	strcpy(req.InvestorID, pOrder->InvestorID);
-	///±¨µ¥²Ù×÷ÒıÓÃ
+	///æŠ¥å•æ“ä½œå¼•ç”¨
 //	TThostFtdcOrderActionRefType	OrderActionRef;
-	///±¨µ¥ÒıÓÃ
+	///æŠ¥å•å¼•ç”¨
 	strcpy(req.OrderRef, pOrder->OrderRef);
-	///ÇëÇó±àºÅ
+	///è¯·æ±‚ç¼–å·
 //	TThostFtdcRequestIDType	RequestID;
-	///Ç°ÖÃ±àºÅ
+	///å‰ç½®ç¼–å·
 	req.FrontID = FRONT_ID;
-	///»á»°±àºÅ
+	///ä¼šè¯ç¼–å·
 	req.SessionID = SESSION_ID;
-	///½»Ò×Ëù´úÂë
+	///äº¤æ˜“æ‰€ä»£ç 
 //	TThostFtdcExchangeIDType	ExchangeID;
-	///±¨µ¥±àºÅ
+	///æŠ¥å•ç¼–å·
 //	TThostFtdcOrderSysIDType	OrderSysID;
-	///²Ù×÷±êÖ¾
+	///æ“ä½œæ ‡å¿—
 	req.ActionFlag = THOST_FTDC_AF_Delete;
-	///¼Û¸ñ
+	///ä»·æ ¼
 //	TThostFtdcPriceType	LimitPrice;
-	///ÊıÁ¿±ä»¯
+	///æ•°é‡å˜åŒ–
 //	TThostFtdcVolumeType	VolumeChange;
-	///ÓÃ»§´úÂë
+	///ç”¨æˆ·ä»£ç 
 //	TThostFtdcUserIDType	UserID;
-	///ºÏÔ¼´úÂë
+	///åˆçº¦ä»£ç 
 	strcpy(req.InstrumentID, pOrder->InstrumentID);
 
 	int iResult = pUserApi->ReqOrderAction(&req, ++iRequestID);
-	cerr << "--->>> ±¨µ¥²Ù×÷ÇëÇó: "  << iResult << ((iResult == 0) ? ", ³É¹¦" : ", Ê§°Ü") << endl;
+	cerr << "--->>> æŠ¥å•æ“ä½œè¯·æ±‚: "  << iResult << ((iResult == 0) ? ", æˆåŠŸ" : ", å¤±è´¥") << endl;
 	ORDER_ACTION_SENT = true;
 }
 
@@ -290,7 +289,7 @@ void CTraderSpi::OnRspOrderAction(CThostFtdcInputOrderActionField *pInputOrderAc
 	IsErrorRspInfo(pRspInfo);
 }
 
-///±¨µ¥Í¨Öª
+///æŠ¥å•é€šçŸ¥
 void CTraderSpi::OnRtnOrder(CThostFtdcOrderField *pOrder)
 {
 	cerr << "--->>> " << "OnRtnOrder"  << endl;
@@ -299,11 +298,11 @@ void CTraderSpi::OnRtnOrder(CThostFtdcOrderField *pOrder)
 		if (IsTradingOrder(pOrder))
 			ReqOrderAction(pOrder);
 		else if (pOrder->OrderStatus == THOST_FTDC_OST_Canceled)
-			cout << "--->>> ³·µ¥³É¹¦" << endl;
+			cout << "--->>> æ’¤å•æˆåŠŸ" << endl;
 	}
 }
 
-///³É½»Í¨Öª
+///æˆäº¤é€šçŸ¥
 void CTraderSpi::OnRtnTrade(CThostFtdcTradeField *pTrade)
 {
 	cerr << "--->>> " << "OnRtnTrade"  << endl;
@@ -329,7 +328,7 @@ void CTraderSpi::OnRspError(CThostFtdcRspInfoField *pRspInfo, int nRequestID, bo
 
 bool CTraderSpi::IsErrorRspInfo(CThostFtdcRspInfoField *pRspInfo)
 {
-	// Èç¹ûErrorID != 0, ËµÃ÷ÊÕµ½ÁË´íÎóµÄÏìÓ¦
+	// å¦‚æœErrorID != 0, è¯´æ˜æ”¶åˆ°äº†é”™è¯¯çš„å“åº”
 	bool bResult = ((pRspInfo) && (pRspInfo->ErrorID != 0));
 	if (bResult)
 		cerr << "--->>> ErrorID=" << pRspInfo->ErrorID << ", ErrorMsg=" << pRspInfo->ErrorMsg << endl;

@@ -1,4 +1,4 @@
-#include ".\ThostTraderApi\ThostFtdcTraderApi.h"
+#include "..\CTP_Api\ThostFtdcTraderApi.h"
 #include "TraderSpi.h"
 
 CThostFtdcTraderApi* pUserApi;  // UserApi对象

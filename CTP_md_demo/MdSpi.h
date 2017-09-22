@@ -1,5 +1,5 @@
 #pragma once
-#include ".\ThostTraderApi\ThostFtdcMdApi.h"
+#include "..\CTP_Api\ThostFtdcMdApi.h"
 
 class CMdSpi : public CThostFtdcMdSpi
 {

@@ -1,4 +1,4 @@
-#include ".\ThostTraderApi\ThostFtdcMdApi.h"
+#include "..\CTP_Api\ThostFtdcMdApi.h"
 #include "MdSpi.h"
 
 CThostFtdcMdApi* pUserApi; // UserApi对象
