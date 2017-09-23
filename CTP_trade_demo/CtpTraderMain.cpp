@@ -9,7 +9,7 @@ TThostFtdcInvestorIDType INVESTOR_ID = "059979";		// 投资者代码
 TThostFtdcPasswordType  PASSWORD = "123456";			// 用户密码
 TThostFtdcInstrumentIDType INSTRUMENT_ID = "CF801";	    // 合约代码
 //TThostFtdcDirectionType	DIRECTION = THOST_FTDC_D_Sell;	// 买卖方向
-TThostFtdcDirectionType	DIRECTION = THOST_FTDC_D_Buy;     // ping jin THOST_FTDC_OF_CloseToday  THOST_FTDC_OF_Close
+TThostFtdcDirectionType	DIRECTION = THOST_FTDC_D_Buy;     // 开多 THOST_FTDC_OF_CloseToday  平今 THOST_FTDC_OF_Close 平仓
 TThostFtdcPriceType	LIMIT_PRICE = 15350;  // 38850;		 // 价格
 int iRequestID = 0;   // 请求编号
 
